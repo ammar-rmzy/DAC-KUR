@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard KUR & PDRB Maluku Utara 2018–2022 · DAC 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --navy:#1A3A6B; --navy2:#22487A; --navy-light:#EEF3FB;
+  --gold:#E8A000; --gold2:#F5BC30; --gold-light:#FFF8E6;
+  --teal:#0E7C6A; --teal-lt:#E6F4F1;
+  --green:#2E8B3A; --green2:#4CAF50; --green-light:#EDF7EE;
+  --red:#C0392B; --red-light:#FDECEA;
+  --orange:#E67E22; --blue:#2980B9;
+  --bg:#F7F8FC; --bg2:#FFFFFF; --bg3:#EEF2F8;
+  --text:#1A1A2E; --gray:#5A6478; --lgray:#E2E8F0; --border:#D0D8E8;
+  --shadow:0 2px 12px rgba(26,58,107,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ══ NAV ══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:var(--navy);border-bottom:3px solid var(--gold);}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:8px 1.25rem 6px;gap:10px;}
+.nav-brand-wrap{display:flex;flex-direction:column;}
+.nav-brand{font-family:'DM Serif Display',serif;font-size:14px;color:var(--gold2);letter-spacing:.01em;line-height:1.2;}
+.nav-meta{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;}
+.nav-pill{display:flex;gap:4px;flex-shrink:0;}
+.nav-pill-btn{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.25);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:rgba(255,255,255,.6);font-family:'DM Sans',sans-serif;}
+.nav-pill-btn.active{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.nav-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1px solid rgba(255,255,255,.1);padding:0 .5rem;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{flex:0 0 auto;padding:8px 14px;border:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;background:transparent;color:rgba(255,255,255,.45);border-bottom:2px solid transparent;}
+.nav-tab:hover{color:#fff;background:rgba(232,160,0,.15);}
+.nav-tab.active{color:rgba(255,255,255,.9);border-bottom-color:var(--gold);background:rgba(255,255,255,.06);}
+
+/* ══ VIEWS ══ */
+.view{display:none;min-height:100vh;}
+.view.active{display:block;}
+
+/* ══ ANALISIS VIEW ══ */
+.slide{display:none;min-height:calc(100vh - 170px);padding:0 0 72px;}
+.slide.active{display:block;}
+.inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;}
+
+/* ══ SLIDE HEADER ══ */
+.slide-header{padding:1.5rem 0 1.25rem;border-bottom:2px solid var(--lgray);margin-bottom:1.5rem;}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.slide-title{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.2;color:var(--navy);margin-bottom:5px;}
+.slide-desc{font-size:12px;color:var(--gray);line-height:1.65;max-width:720px;}
+
+/* ══ KPI STRIP ══ */
+.kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;border-top:3px solid var(--gold);box-shadow:var(--shadow);}
+.kpi.green{border-top-color:var(--green);}
+.kpi.red{border-top-color:var(--red);}
+.kpi.blue{border-top-color:var(--blue);}
+.kpi.teal{border-top-color:var(--teal);}
+.kpi-lbl{font-size:9px;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:.07em;}
+.kpi-val{font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy);line-height:1;}
+.kpi.green .kpi-val{color:var(--green);}
+.kpi.red .kpi-val{color:var(--red);}
+.kpi.blue .kpi-val{color:var(--blue);}
+.kpi.teal .kpi-val{color:var(--teal);}
+.kpi-sub{font-size:9px;color:var(--gray);margin-top:3px;}
+
+/* ══ GRID ══ */
+.grid{display:grid;gap:12px;margin-bottom:12px;}
+.grid.g2{grid-template-columns:1fr 1fr;}
+.grid.g3{grid-template-columns:5fr 4fr;}
+.grid.g4{grid-template-columns:1fr 1fr 1fr 1fr;}
+
+/* ══ CHART BOX ══ */
+.cbox{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);}
+.cbox-title{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gray);margin-bottom:12px;}
+
+/* ══ LEGEND ══ */
+.legend{display:flex;flex-direction:column;gap:6px;}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--gray);}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.leg-pct{margin-left:auto;font-weight:600;font-size:10px;color:var(--navy);}
+
+/* ══ NARASI & CALLOUTS ══ */
+.narasi{background:var(--navy-light);border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:10px;font-size:12px;color:var(--gray);line-height:1.75;}
+.narasi strong,.narasi b{color:var(--navy);font-weight:600;}
+.narasi.gold{background:var(--gold-light);border-left-color:var(--gold);}
+.narasi.gold strong{color:#7A4500;}
+.narasi.green{background:var(--green-light);border-left-color:var(--green);}
+.narasi.green strong{color:var(--green);}
+.narasi.red{background:var(--red-light);border-left-color:var(--red);}
+.narasi.teal{background:var(--teal-lt);border-left-color:var(--teal);}
+.narasi.teal strong{color:var(--teal);}
+
+.did-you-know{display:flex;align-items:flex-start;gap:12px;background:var(--gold-light);border:1px solid rgba(232,160,0,.35);border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+.dyk-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.dyk-body{font-size:12px;color:var(--gray);line-height:1.7;}
+.dyk-body strong{color:#7A4500;}
+
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.insight-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.ins-num{font-family:'DM Serif Display',serif;font-size:28px;color:var(--gold);line-height:1;}
+.ins-label{font-size:11px;font-weight:600;color:var(--navy);margin:3px 0 4px;}
+.ins-desc{font-size:11px;color:var(--gray);line-height:1.6;}
+
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.bullet-list li{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--gray);line-height:1.65;}
+.bullet-list li::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px;}
+.bullet-list li strong{color:var(--navy);}
+.bullet-list.green li::before{background:var(--green);}
+.bullet-list.navy li::before{background:var(--navy);}
+.bullet-list.teal li::before{background:var(--teal);}
+
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:8px;}
+
+.quote-box{background:var(--navy);color:#fff;border-radius:10px;padding:16px 18px;margin-bottom:12px;font-family:'DM Serif Display',serif;font-size:14px;line-height:1.6;text-align:center;}
+.quote-box span{color:var(--gold2);}
+
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;margin-bottom:8px;}
+.badge.gold{background:rgba(232,160,0,.12);color:#7A4500;border:1px solid rgba(232,160,0,.35);}
+.badge.green{background:var(--green-light);color:var(--green);border:1px solid rgba(46,139,58,.3);}
+.badge.navy{background:var(--navy-light);color:var(--navy);border:1px solid var(--border);}
+.badge.red{background:var(--red-light);color:var(--red);border:1px solid rgba(192,57,43,.25);}
+
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.tag{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--gray);background:var(--bg2);}
+.tag.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;}
+.two-col.asym{grid-template-columns:3fr 2fr;}
+
+.rekomendasi-list{display:flex;flex-direction:column;gap:10px;}
+.rekom-item{display:flex;align-items:flex-start;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.rekom-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.rekom-body{font-size:12px;color:var(--gray);line-height:1.65;}
+.rekom-body strong{color:var(--navy);display:block;margin-bottom:2px;font-size:12px;}
+
+.mini-badge{font-size:10px;font-weight:700;letter-spacing:.04em;margin-bottom:4px;}
+
+/* ══ SIMULATOR VIEW ══ */
+#view-simulator{padding-top:0;}
+.sim-hero{background:linear-gradient(135deg,#1A3A6B 0%,#22487A 55%,#0E7C6A 100%);padding:28px 1.25rem 22px;position:relative;overflow:hidden;}
+.sim-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:rgba(232,160,0,.12);pointer-events:none;}
+.sim-hero-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.sim-hero-title{font-family:'DM Serif Display',serif;font-size:1.8rem;font-weight:400;color:#fff;line-height:1.2;margin-bottom:6px;}
+.sim-hero-title span{color:#FFD16B;}
+.sim-hero-sub{font-size:.8rem;color:rgba(255,255,255,.65);max-width:580px;line-height:1.5;}
+.sim-hero-badge{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 12px;font-size:.7rem;color:rgba(255,255,255,.85);font-weight:600;}
+.sim-hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;}
+
+.sim-main{max-width:1280px;margin:0 auto;padding:24px 1.25rem 80px;display:grid;grid-template-columns:380px 1fr;gap:20px;align-items:start;}
+
+.sim-panel{background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);}
+.sim-panel-header{padding:12px 16px;background:#F1F5F9;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sim-panel-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);}
+.sim-panel-body{padding:16px;}
+
+.sector-row{margin-bottom:14px;}
+.sector-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.sector-name{font-size:.75rem;font-weight:600;color:var(--navy);line-height:1.3;}
+.sector-val{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;color:var(--teal);white-space:nowrap;}
+.sector-baseline{font-size:.65rem;color:var(--gray);margin-top:1px;}
+input[type=range]{width:100%;height:5px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:3px;cursor:pointer;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);border:2px solid #fff;box-shadow:0 1px 4px rgba(14,124,106,.4);cursor:pointer;transition:transform .1s;}
+input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);}
+.pct-tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:.65rem;font-weight:700;font-family:'JetBrains Mono',monospace;margin-left:6px;}
+.pct-pos{background:var(--teal-lt);color:var(--teal);}
+.pct-neg{background:var(--red-light);color:var(--red);}
+.pct-zero{background:#F1F5F9;color:var(--gray);}
+
+.pct-input-wrap{display:flex;align-items:center;gap:4px;margin-left:6px;}
+.pct-input{width:62px;padding:2px 6px;border-radius:7px;border:1.5px solid var(--border);background:#F8FAFC;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:var(--navy);text-align:right;outline:none;transition:border-color .15s;}
+.pct-input:focus{border-color:var(--teal);background:#fff;}
+.pct-input.is-pos{border-color:var(--teal);color:var(--teal);background:var(--teal-lt);}
+.pct-input.is-neg{border-color:var(--red);color:var(--red);background:var(--red-light);}
+.pct-sign{font-size:.7rem;color:var(--gray);font-family:'JetBrains Mono',monospace;user-select:none;}
+
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.rcard{background:#fff;border-radius:12px;border:1px solid var(--border);padding:14px 16px;}
+.rcard.accent{background:var(--teal);border-color:var(--teal);}
+.rcard.accent2{background:var(--navy);border-color:var(--navy);}
+.rcard.goldcard{background:var(--gold-light);border-color:#F5D08A;}
+.rcard-label{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin-bottom:4px;}
+.rcard.accent .rcard-label,.rcard.accent2 .rcard-label{color:rgba(255,255,255,.7);}
+.rcard.goldcard .rcard-label{color:var(--gold);}
+.rcard-val{font-size:1.55rem;font-weight:800;color:var(--navy);font-family:'JetBrains Mono',monospace;line-height:1;}
+.rcard.accent .rcard-val,.rcard.accent2 .rcard-val{color:#fff;}
+.rcard-sub{font-size:.68rem;color:var(--gray);margin-top:3px;}
+.rcard.accent .rcard-sub,.rcard.accent2 .rcard-sub{color:rgba(255,255,255,.65);}
+
+.delta-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;margin-bottom:10px;font-size:.76rem;font-weight:600;}
+.delta-pos{background:var(--teal-lt);color:var(--teal);}
+.delta-neg{background:var(--red-light);color:var(--red);}
+.delta-zero{background:#F1F5F9;color:var(--gray);}
+
+.chart-wrap{position:relative;height:240px;margin-bottom:14px;}
+canvas{width:100%!important;}
+
+.contrib-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);margin-bottom:10px;}
+.contrib-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.contrib-label{font-size:.7rem;color:var(--navy);width:160px;flex-shrink:0;line-height:1.3;}
+.contrib-bar-wrap{flex:1;height:10px;background:#F1F5F9;border-radius:5px;overflow:hidden;}
+.contrib-bar{height:100%;border-radius:5px;transition:width .4s ease;}
+.contrib-val{font-family:'JetBrains Mono',monospace;font-size:.67rem;font-weight:600;width:55px;text-align:right;flex-shrink:0;}
+
+.hist-table{width:100%;border-collapse:collapse;font-size:.74rem;}
+.hist-table th{background:#F1F5F9;padding:7px 10px;text-align:left;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);border-bottom:1px solid var(--border);}
+.hist-table td{padding:7px 10px;border-bottom:1px solid #F1F5F9;}
+.hist-table tr:last-child td{border-bottom:none;}
+.hist-table tr:hover td{background:#F8FAFC;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:.76rem;font-weight:600;color:var(--gray);cursor:pointer;transition:all .15s;margin-top:10px;font-family:'DM Sans',sans-serif;}
+.reset-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-lt);}
+
+.disclaimer{font-size:.67rem;color:var(--gray);line-height:1.5;padding:10px 14px;background:#FEF9EC;border-radius:8px;border:1px solid #F5D08A;margin-top:14px;}
+
+/* ══ FOOTER ══ */
+.foot{position:fixed;bottom:0;left:0;right:0;background:var(--navy);border-top:3px solid var(--gold);display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 1rem;z-index:200;}
+.foot-btn{padding:8px 20px;border-radius:7px;border:1px solid rgba(255,255,255,.25);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;background:transparent;color:#fff;-webkit-tap-highlight-color:transparent;}
+.foot-btn:hover{background:rgba(255,255,255,.1);}
+.foot-btn.primary{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:700;}
+.foot-btn.primary:hover{background:var(--gold2);}
+.foot-ind{font-size:11px;color:rgba(255,255,255,.4);min-width:50px;text-align:center;}
+
+/* hide footer on simulator */
+body.sim-mode .foot-nav{display:none;}
+
+/* ══ RESPONSIVE ══ */
+@media(min-width:700px){
+  .nav-top{padding:10px 2rem 7px;}
+  .nav-brand{font-size:15px;}
+  .nav-tabs{padding:0 2rem;}
+  .slide{padding-bottom:62px;}
+  .inner{padding:0 2rem;}
+  .slide-title{font-size:26px;}
+  .sim-main{padding:24px 2rem 80px;}
+}
+@media(max-width:899px){
+  .sim-main{grid-template-columns:1fr;}
+}
+@media(max-width:699px){
+  .grid.g2,.grid.g3,.grid.g4,.two-col,.two-col.asym,.insight-grid{grid-template-columns:1fr;}
+  .kpi-strip{grid-template-columns:1fr 1fr;}
+  .result-grid{grid-template-columns:1fr 1fr;}
+  .foot .foot-ind{min-width:36px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav>
+  <div class="nav-top">
+    <div class="nav-brand-wrap">
+      <div class="nav-brand">KUR &amp; PDRB Maluku Utara · DAC 2026</div>
+      <div class="nav-meta">Sintong Arfiyansyah – Ammar Ramzy · Kanwil DJPb Maluku Utara · Total Subsidi Rp 173,14 M · 2018–2022</div>
+    </div>
+    <div class="nav-pill">
+      <button class="nav-pill-btn active" onclick="switchView('analisis')" id="pill-analisis">📊 Analisis</button>
+      <button class="nav-pill-btn" onclick="switchView('simulator')" id="pill-simulator">⚙️ Simulator</button>
+    </div>
+  </div>
+  <div class="nav-tabs" id="analisis-tabs">
+    <button class="nav-tab active" onclick="goSlide(0)">📖 Pengantar</button>
+    <button class="nav-tab" onclick="goSlide(1)">🔬 Kerangka</button>
+    <button class="nav-tab" onclick="goSlide(2)">🗺 Per Kabupaten</button>
+    <button class="nav-tab" onclick="goSlide(3)">🏭 Per Sektor</button>
+    <button class="nav-tab" onclick="goSlide(4)">🏪 Jenis Usaha</button>
+    <button class="nav-tab" onclick="goSlide(5)">📈 Analisis Regresi</button>
+    <button class="nav-tab" onclick="goSlide(6)">✅ Kesimpulan</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     VIEW: ANALISIS
+════════════════════════════════════════ -->
+<div class="view active" id="view-analisis" style="padding-top:96px;">
+
+<!-- SLIDE 0 — PENGANTAR -->
+<div class="slide active" id="slide-0">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Pengantar · DAC 2026</div>
+    <h1 class="slide-title">Mengukur Dampak KUR Sektoral terhadap PDRB Maluku Utara</h1>
+    <p class="slide-desc">Kolaborasi Huber-White EViews &amp; Elastic Net Orange · Oleh: <strong>Sintong Arfiyansyah – Ammar Ramzy Rayhan Harris</strong> · Kanwil DJPb Maluku Utara</p>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-lbl">Total Subsidi KUR</div><div class="kpi-val">Rp 173,14 M</div><div class="kpi-sub">2018–2022 · Maluku Utara</div></div>
+    <div class="kpi green"><div class="kpi-lbl">Rata-rata Growth</div><div class="kpi-val">+20,23%</div><div class="kpi-sub">Per tahun YoY</div></div>
+    <div class="kpi" style="border-top-color:var(--gold)"><div class="kpi-lbl">Suku Bunga KUR</div><div class="kpi-val">6%</div><div class="kpi-sub">Lebih rendah dari komersial</div></div>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="narasi gold"><b>KUR adalah Program Pembiayaan Bersubsidi</b> yang ditujukan kepada Usaha Mikro, Kecil, dan Menengah (UMKM) dengan suku bunga lebih rendah (6%). Subsidi selisih bunga ditanggung oleh pemerintah melalui APBN sebagai <em>Belanja Subsidi Non-Energi</em>.</div>
+      <div class="narasi">Subsidi KUR ibarat <strong>tetesan air gula dalam satu gelas aktivitas perekonomian wilayah.</strong> Dia mempunyai efek memaniskan, namun perlu takaran yang tepat agar tidak menimbulkan risiko yang besar.</div>
+      <div class="narasi green"><strong>Pra-Pandemi (2018–2019):</strong> Pertumbuhan perlahan hingga menembus Rp 27,13 M pada 2019 seiring gencarnya program digitalisasi dan akses perbankan bagi UMKM regional.<br><br><strong>Pandemi &amp; Pasca-Pandemi (2021–2022):</strong> Pemerintah menyuntikkan dana subsidi terbesar mencapai <strong>Rp 47,17 M (loncat 66%)</strong>. Komitmen stabil menjaga daya beli masyarakat pasca-krisis.</div>
+    </div>
+    <div>
+      <div class="cbox" style="margin-bottom:12px">
+        <div class="cbox-title">Subsidi KUR Maluku Utara per Tahun (Miliar Rp)</div>
+        <div style="position:relative;height:220px"><canvas id="cOverview"></canvas></div>
+      </div>
+      <div class="did-you-know">
+        <div class="dyk-icon">💡</div>
+        <div class="dyk-body">Subsidi KUR diklasifikasikan sebagai <strong>Belanja Pemerintah Pusat</strong>, tepatnya di bawah jenis <strong>Belanja Subsidi Non-Energi (Subsidi Bunga Kredit Program)</strong>, dan diharapkan memperkuat <em>multiplier effect</em> pertumbuhan ekonomi di akar rumput.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLIDE 1 — KERANGKA -->
+<div class="slide" id="slide-1">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Kerangka Penelitian</div>
+    <h1 class="slide-title">Kerangka Konseptual, Model &amp; Regresi</h1>
+    <p class="slide-desc">Integrasi Ekonometrika Klasik yang ketat dalam inferensi statistik dengan kekuatan Machine Learning dalam seleksi variabel — diuji pada data triwulanan 2018–2022.</p>
+  </div>
+  <div class="section-label" style="margin-bottom:8px">🧭 Kerangka Konseptual</div>
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="narasi" style="border-left-color:var(--navy);background:var(--navy-light)">
+      <b>Integrasi dua pendekatan:</b><br><br>
+      <b style="color:var(--navy)">Ekonometrika Klasik (EViews)</b> — ketat dalam inferensi statistik dan pembersihan bias data, menggunakan OLS dengan Huber-White Robust SE untuk menangani heteroskedastisitas.<br><br>
+      <b style="color:var(--green)">Machine Learning (Orange)</b> — unggul dalam seleksi variabel dan prediksi pada data berdimensi tinggi/multikolinearitas parah, menggunakan Elastic Net Regression and Rank.
+    </div>
+    <div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--navy);color:#fff;border-radius:8px;padding:12px 16px;font-size:12px;font-weight:600;text-align:center">📊 Data Triwulanan 2018–2022<br><span style="font-weight:400;font-size:11px;color:rgba(255,255,255,.7)">Sumber: BPS &amp; Data Lomba DDAC 2026</span></div>
+        <div style="display:flex;justify-content:center;font-size:18px;color:var(--gold)">▼</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--gold-light);border:1px solid rgba(232,160,0,.4);border-radius:8px;padding:10px 12px;font-size:11px;text-align:center">
+            <div style="font-weight:700;color:#7A4500;margin-bottom:3px">🟡 Orange</div>
+            <div style="color:var(--gray)">Elastic Net Regression &amp; Rank</div>
+            <div style="font-size:10px;color:var(--gray);margin-top:2px">Menangani Multikolinearitas</div>
+          </div>
+          <div style="background:var(--navy-light);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:11px;text-align:center">
+            <div style="font-weight:700;color:var(--navy);margin-bottom:3px">🔵 EViews</div>
+            <div style="color:var(--gray)">OLS + Huber-White Robust SE</div>
+            <div style="font-size:10px;color:var(--gray);margin-top:2px">Menangani Heteroskedastisitas</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;font-size:18px;color:var(--gold)">▼</div>
+        <div style="background:var(--green-light);border:1px solid rgba(46,139,58,.35);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--green);text-align:center">✅ Kesimpulan dan Rekomendasi</div>
+      </div>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="cbox">
+      <div class="section-label" style="margin-bottom:10px">🔗 Kerangka Model</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:140px">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:11px;color:var(--gray)"><b style="color:var(--navy)">X1</b> = Subsidi KUR Perikanan</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:11px;color:var(--gray)"><b style="color:var(--navy)">X2</b> = Subsidi KUR Industri Pengolahan</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:11px;color:var(--gray)"><b style="color:var(--navy)">X3</b> = KUR Jasa Pendidikan</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:11px;color:var(--gray)">⋮</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:11px;color:var(--gray)"><b style="color:var(--navy)">X11</b> = KUR Pertanian, Perburuan &amp; Kehutanan</div>
+        </div>
+        <div style="font-size:22px;color:var(--gold);flex-shrink:0">→</div>
+        <div style="background:var(--navy);color:#fff;border-radius:10px;padding:16px 20px;text-align:center;flex-shrink:0">
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold2)">PDRB</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:4px">Kapasitas Ekonomi</div>
+        </div>
+      </div>
+    </div>
+    <div class="cbox">
+      <div class="section-label" style="margin-bottom:10px">📐 Model Regresi</div>
+      <div style="background:var(--navy);border-radius:10px;padding:16px;margin-bottom:12px;overflow-x:auto">
+        <p style="font-family:'DM Serif Display',serif;font-size:14px;color:#fff;line-height:1.8;white-space:nowrap">Y = β₀ + β₁X1 + β₂X2 + ··· + β₁₁X11 + <span style="color:var(--gold2)">ε</span></p>
+      </div>
+      <ul class="bullet-list navy" style="font-size:11px">
+        <li><b>Y</b> = PDRB (dalam Miliar Rupiah)</li>
+        <li><b>β₀</b> = Konstanta (Intersep)</li>
+        <li><b>β₁…β₁₁</b> = Koefisien regresi masing-masing sektor</li>
+        <li><b>X₁…X₁₁</b> = Nilai subsidi KUR masing-masing sektor (juta Rp)</li>
+        <li><b style="color:var(--gold)">ε</b> = Error term (residual)</li>
+      </ul>
+      <div class="narasi" style="margin-top:10px;padding:8px 12px;font-size:11px"><b>R² Model:</b> 0,976 — model menjelaskan 97,6% variasi PDRB</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLIDE 2 — PER KABUPATEN -->
+<div class="slide" id="slide-2">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Distribusi Wilayah</div>
+    <h1 class="slide-title">Distribusi Subsidi KUR per Kabupaten/Kota</h1>
+    <p class="slide-desc">Penyaluran subsidi KUR 2018–2022 tersebar di 10 kabupaten/kota Maluku Utara. Distribusi variatif dengan area perkotaan lebih dominan dibanding area kepulauan terpencil.</p>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-lbl">Terbesar</div><div class="kpi-val">Rp 38,8 M</div><div class="kpi-sub">Kota Ternate — 22,4%</div></div>
+    <div class="kpi"><div class="kpi-lbl">Top 3 Wilayah</div><div class="kpi-val">50,8%</div><div class="kpi-sub">Ternate · Tidore · Halut</div></div>
+    <div class="kpi red"><div class="kpi-lbl">Terkecil</div><div class="kpi-val">Rp 1,97 M</div><div class="kpi-sub">Kab. Pulau Taliabu — 1,1%</div></div>
+  </div>
+  <div class="grid g3" style="margin-bottom:12px" id="gKab">
+    <div class="cbox">
+      <div class="cbox-title">Nilai KUR per Kabupaten/Kota (Miliar Rp)</div>
+      <div style="position:relative;height:300px"><canvas id="c1bar"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="cbox-title">Proporsi (%)</div>
+      <div style="position:relative;height:195px"><canvas id="c1pie"></canvas></div>
+      <div style="margin-top:12px" id="leg1"></div>
+    </div>
+  </div>
+  <div class="grid g2" id="gKabNarasi">
+    <div class="narasi gold"><b>🏙 Magnet Subsidi Urban:</b> Kota Ternate, Tidore, dan Halmahera Utara mencapai <strong>50,8%</strong> dari total KUR, menunjukkan UMKM masih bertumpu pada wilayah urban.</div>
+    <div class="narasi red"><b>🏝 Wilayah Kepulauan Tertinggal:</b> Sula, Morotai, dan Taliabu sangat rendah — menandakan mesin ekonomi yang belum mendapatkan subsidi cukup sebagai motor perekonomian.</div>
+  </div>
+  <div class="did-you-know">
+    <div class="dyk-icon">⚡</div>
+    <div class="dyk-body"><strong>Did You Know:</strong> Kota Ternate mendapatkan distribusi subsidi <strong>20 kali lipat</strong> dibanding Kab. Pulau Taliabu. Menandakan aksesibilitas dan literasi keuangan menghadapi jurang kesenjangan yang dalam.</div>
+  </div>
+</div>
+</div>
+
+<!-- SLIDE 3 — PER SEKTOR -->
+<div class="slide" id="slide-3">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Distribusi Sektoral</div>
+    <h1 class="slide-title">Distribusi Subsidi KUR per Sektor Ekonomi</h1>
+    <p class="slide-desc">Penyaluran KUR 2018–2022 tersebar di hampir semua sektor, dengan 4 sektor paling dominan: Perdagangan, Pertanian, Akomodasi, dan Perikanan.</p>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-lbl">Sektor Dominan</div><div class="kpi-val">56,9%</div><div class="kpi-sub">Perdagangan Besar &amp; Eceran</div></div>
+    <div class="kpi green"><div class="kpi-lbl">Growth 2020→2021</div><div class="kpi-val">+53,9%</div><div class="kpi-sub">Lonjakan terbesar Perdagangan</div></div>
+    <div class="kpi red"><div class="kpi-lbl">Pertambangan</div><div class="kpi-val">Rp 401 Rb</div><div class="kpi-sub">Hanya 0,001% dari total KUR</div></div>
+  </div>
+  <div class="grid g2" style="margin-bottom:12px">
+    <div class="cbox">
+      <div class="cbox-title">Distribusi per Sektor</div>
+      <div style="position:relative;height:240px"><canvas id="c2pie"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="cbox-title">Legenda Sektor</div>
+      <div id="leg2" class="legend"></div>
+    </div>
+  </div>
+  <div class="grid g4" id="gLines" style="margin-bottom:10px">
+    <div class="cbox">
+      <div class="mini-badge" style="color:#E8A000">① Perdagangan</div>
+      <div class="cbox-title">Besar &amp; Eceran</div>
+      <div style="position:relative;height:130px"><canvas id="cL1"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="mini-badge" style="color:#2E8B3A">② Pertanian</div>
+      <div class="cbox-title">Perburuan &amp; Kehutanan</div>
+      <div style="position:relative;height:130px"><canvas id="cL2"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="mini-badge" style="color:#E67E22">③ Akomodasi</div>
+      <div class="cbox-title">Penyediaan Makan Minum</div>
+      <div style="position:relative;height:130px"><canvas id="cL3"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="mini-badge" style="color:#2980B9">④ Perikanan</div>
+      <div class="cbox-title">Budidaya &amp; Tangkap</div>
+      <div style="position:relative;height:130px"><canvas id="cL4"></canvas></div>
+    </div>
+  </div>
+  <div class="insight-grid">
+    <div class="narasi gold"><b>🛒 Perdagangan (Rp 98,5 M):</b> Bersentuhan langsung dengan kebutuhan warga — toko kelontong, pasar rakyat, pedagang eceran. Dominasi mutlak namun <strong>secara statistik tidak berpengaruh terhadap PDRB</strong>.</div>
+    <div class="narasi green"><b>🌿 Pertanian (Rp 20,0 M):</b> KUR cukup aktif merambah sektor hulu/produksi. Cenderung membutuhkan modal awal untuk masa tanam dengan risiko relatif lebih tinggi.</div>
+    <div class="narasi"><b>🍽 Akomodasi &amp; Makan Minum (Rp 14,6 M):</b> Konsisten menggeliat seiring mulai berkembangnya sektor pariwisata dan kuliner lokal pasca pandemi.</div>
+    <div class="narasi" style="background:var(--navy-light);border-left-color:var(--blue)"><b>🎣 Perikanan (Rp 10,7 M):</b> Sebagai wilayah kepulauan, 6,2% tergolong moderat. Digunakan nelayan kecil dan pembudidaya untuk pakan, tambak, dan perbaikan alat tangkap.</div>
+  </div>
+  <div class="did-you-know">
+    <div class="dyk-icon">⚠️</div>
+    <div class="dyk-body"><strong>Did You Know:</strong> Meskipun menjadi <strong>katalisator utama pertumbuhan ekonomi Maluku Utara</strong>, sektor pertambangan justru hampir tidak mendapatkan subsidi KUR sama sekali (hanya <strong>Rp 401 ribu</strong>). Pelaku usaha pertambangan lebih memilih skema pembiayaan komersial korporasi.</div>
+  </div>
+</div>
+</div>
+
+<!-- SLIDE 4 — JENIS USAHA -->
+<div class="slide" id="slide-4">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Jenis Usaha &amp; Skema</div>
+    <h1 class="slide-title">Jenis Usaha yang Mendapatkan Subsidi KUR</h1>
+    <p class="slide-desc">KMK = Kredit Modal Kerja (operasional harian). KI = Kredit Investasi (pengembangan kapasitas). Mikro/Kecil/Super Mikro = batas plafon kredit.</p>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-lbl">Modal Kerja (KMK)</div><div class="kpi-val">79,5%</div><div class="kpi-sub">Rp 137,6 M — dominan</div></div>
+    <div class="kpi green"><div class="kpi-lbl">Usaha Mikro</div><div class="kpi-val">Rp 113,6 M</div><div class="kpi-sub">Kumulatif 2018–2022</div></div>
+    <div class="kpi red"><div class="kpi-lbl">Super Mikro</div><div class="kpi-val">1/20</div><div class="kpi-sub">Dibanding Mikro — sangat minoritas</div></div>
+  </div>
+  <div class="grid g2" id="gSkema" style="margin-bottom:12px">
+    <div class="cbox">
+      <div class="cbox-title">Proporsi per Skema (%)</div>
+      <div style="position:relative;height:260px"><canvas id="c3pie"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="cbox-title">Modal Kerja vs Investasi per Segmen</div>
+      <div style="position:relative;height:200px"><canvas id="c3bar"></canvas></div>
+    </div>
+  </div>
+  <div class="grid g2" id="gSkemaInfo">
+    <div>
+      <div class="cbox" style="margin-bottom:10px">
+        <div class="cbox-title">Plafon KUR (Permenko No. 1 Tahun 2026)</div>
+        <div class="tag-row" style="margin-bottom:0">
+          <span class="tag active">Super Mikro: s.d. Rp 10 Juta</span>
+          <span class="tag active">Mikro: Rp 10 Juta – Rp 100 Juta</span>
+          <span class="tag active">Kecil: Rp 100 Juta – Rp 500 Juta</span>
+        </div>
+      </div>
+      <div class="narasi gold"><b>Skema Mikro-KMK (Rp 96,8 M)</b> menyerap dana terbesar. Kondisi ini menjelaskan bahwa pelaku usaha Maluku Utara mayoritas membutuhkan <strong>likuiditas jangka pendek</strong> untuk memutar stok dagangan harian, bukan investasi aset tetap jangka panjang.</div>
+    </div>
+    <div>
+      <div class="did-you-know" style="margin-bottom:10px">
+        <div class="dyk-icon">😮</div>
+        <div class="dyk-body"><strong>Did You Know:</strong> Usaha <strong>Super Mikro</strong> — skala terkecil — justru menjadi paling minoritas dalam mendapatkan KUR. Jumlah subsidinya hanya <strong>1/20 dari usaha Mikro</strong>.</div>
+      </div>
+      <div class="quote-box"><span>"</span>Padahal usaha ini seharusnya menjadi usaha yang paling haus akan likuiditas dan sangat membutuhkan pembiayaan untuk <span>naik kelas.</span><span>"</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLIDE 5 — ANALISIS REGRESI -->
+<div class="slide" id="slide-5">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Analisis Regresi · EViews &amp; Orange</div>
+    <h1 class="slide-title">Dampak Subsidi KUR terhadap Pertumbuhan Ekonomi</h1>
+    <p class="slide-desc">Kolaborasi klasikal Huber-White EViews dengan Elastic Net Regression Orange — dua laboratorium berbeda untuk menguji dampak terbaik dan menghindari kekurangan satu sama lain.</p>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi teal"><div class="kpi-lbl">Sektor Paling Berpengaruh</div><div class="kpi-val">Perikanan</div><div class="kpi-sub">Signifikan &amp; positif di kedua metode</div></div>
+    <div class="kpi"><div class="kpi-lbl">R² Model</div><div class="kpi-val">0,976</div><div class="kpi-sub">EViews OLS Huber-White</div></div>
+    <div class="kpi red"><div class="kpi-lbl">Temuan Mengejutkan</div><div class="kpi-val">Perdagangan</div><div class="kpi-sub">KUR terbesar tapi tidak berpengaruh ke PDRB</div></div>
+  </div>
+  <div class="grid g2" id="gReg" style="margin-bottom:12px">
+    <div class="cbox">
+      <div class="badge navy">🧪 Analisis Regresi 1 — Orange</div>
+      <div class="cbox-title" style="margin-top:8px">Elastic Net Regression &amp; Pemeringkatan</div>
+      <ul class="bullet-list teal" style="margin-bottom:10px">
+        <li><strong>Top 3 sektor berpengaruh terhadap PDRB:</strong> (1) Perikanan, (2) Industri Pengolahan, (3) Jasa Pendidikan</li>
+        <li><strong>Relevansi terendah:</strong> Perdagangan &amp; Eceran, Pertanian &amp; Kehutanan</li>
+        <li>Kondisi ini mengejutkan karena Perdagangan justru adalah sektor dengan subsidi KUR terbesar di Maluku Utara</li>
+      </ul>
+      <div class="cbox-title" style="margin-bottom:8px">Koefisien Regresi (Elastic Net)</div>
+      <div id="orange-contrib"></div>
+    </div>
+    <div class="cbox">
+      <div class="badge navy">📐 Analisis Regresi 2 — EViews</div>
+      <div class="cbox-title" style="margin-top:8px">OLS dengan Huber-White Robust SE</div>
+      <ul class="bullet-list teal" style="margin-bottom:10px">
+        <li>Sektor <strong>signifikan (prob. &lt; 0,05):</strong> Perikanan, Industri Pengolahan, Jasa Pendidikan, Jasa Kesehatan, Akomodasi, Real Estate, Pertanian</li>
+        <li>Yang <strong>signifikan dan positif</strong> terhadap PDRB: (1) Perikanan, (2) Jasa Pendidikan, (3) Jasa Kesehatan &amp; Kegiatan Sosial</li>
+      </ul>
+      <div style="position:relative;height:200px"><canvas id="cCoef"></canvas></div>
+    </div>
+  </div>
+  <div class="quote-box">Setelah diuji dengan dua metode berbeda, tetesan air di gelas sektor <span>perikanan</span> adalah "aksi" terbaik,<br>sedangkan tetesan gula pada sektor perdagangan terlalu manis dan <span>kurang mampu memutar aktivitas ekonomi.</span></div>
+  <div class="narasi red"><b>⚠ Mismatch Kritis:</b> KUR sektor <strong>Perdagangan mendominasi 56,9%</strong> total subsidi, namun secara statistik <strong>tidak berpengaruh signifikan terhadap PDRB</strong>. Sebaliknya, <strong>Perikanan yang hanya 6,2% KUR</strong> justru menjadi sektor paling berpengaruh dan positif terhadap pertumbuhan ekonomi Maluku Utara.</div>
+</div>
+</div>
+
+<!-- SLIDE 6 — KESIMPULAN -->
+<div class="slide" id="slide-6">
+<div class="inner">
+  <div class="slide-header">
+    <div class="eyebrow">Kesimpulan &amp; Rekomendasi</div>
+    <h1 class="slide-title">Apa yang Perlu Dilakukan?</h1>
+    <p class="slide-desc">Subsidi KUR mampu mendorong pertumbuhan PDRB, namun perlu redistribusi ke sektor yang terbukti berpengaruh secara statistik. Gunakan tab <strong>Simulator</strong> untuk melihat proyeksi dampaknya secara interaktif.</p>
+  </div>
+  <div class="grid g2" id="gKesimpulan" style="margin-bottom:12px">
+    <div class="cbox">
+      <div class="section-label">📌 Kesimpulan</div>
+      <ul class="bullet-list navy">
+        <li>Subsidi KUR tumbuh rata-rata +20,23% per tahun dengan loncatan tertinggi pada 2021 sebesar +66%, meskipun sempat terkontraksi di 2022.</li>
+        <li>KUR Perikanan paling berpengaruh dan positif terhadap PDRB, mencerminkan peran krusial sektor perikanan bagi Maluku Utara sebagai daerah kepulauan.</li>
+        <li>KUR Jasa Pendidikan dan Jasa Kesehatan juga terbukti berpengaruh kuat dan positif terhadap pertumbuhan ekonomi.</li>
+        <li>Subsidi KUR kurang merata karena terfokus pada kota besar dan bertumpu pada sektor perdagangan dan eceran yang secara statistik tidak berpengaruh terhadap PDRB.</li>
+        <li>Usaha Super Mikro menjadi kelompok paling minoritas dalam mendapatkan KUR, padahal kelompok ini paling membutuhkan pembiayaan untuk naik kelas.</li>
+      </ul>
+      <div class="did-you-know" style="margin-top:14px">
+        <div class="dyk-icon">⚙️</div>
+        <div class="dyk-body"><strong>Coba Simulator!</strong> Klik tombol <strong>⚙️ Simulator</strong> di pojok kanan atas untuk mensimulasikan kenaikan KUR per sektor dan melihat dampaknya ke PDRB secara real-time.</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">🎯 Rekomendasi</div>
+      <div class="rekomendasi-list">
+        <div class="rekom-item"><div class="rekom-icon">🏛</div><div class="rekom-body"><strong>Pemerintah Pusat</strong> perlu mengidentifikasi sektor strategis dan memberikan fleksibilitas pada KUR Perikanan — keringanan persyaratan dan bunga untuk memperluas kontribusinya terhadap PDRB.</div></div>
+        <div class="rekom-item"><div class="rekom-icon">🏝</div><div class="rekom-body"><strong>Pemerintah Daerah</strong> perlu berinisiatif memberikan bantuan kepada sektor perikanan: identifikasi usaha potensial, infrastruktur pelabuhan, dan bantuan mesin kapal.</div></div>
+        <div class="rekom-item"><div class="rekom-icon">🤝</div><div class="rekom-body"><strong>Kolaborasi Pusat &amp; Daerah</strong> untuk menetapkan kuota afirmasi bagi sektor perikanan agar tidak dilepas murni ke mekanisme pasar yang cenderung memilih perdagangan.</div></div>
+        <div class="rekom-item"><div class="rekom-icon">🏦</div><div class="rekom-body"><strong>Bank Penyalur</strong> perlu fokus ke sektor produktif seperti perikanan dan mengurangi bertahap dominasi perdagangan yang sudah jenuh dan tidak berpengaruh terhadap PDRB.</div></div>
+        <div class="rekom-item"><div class="rekom-icon">🌐</div><div class="rekom-body"><strong>Semua Stakeholder</strong> perlu berkolaborasi meningkatkan pembiayaan KUR dan menekankan pemerataan penyaluran hingga menjangkau wilayah pinggiran kepulauan.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /view-analisis -->
+
+<!-- ════════════════════════════════════════
+     VIEW: SIMULATOR
+════════════════════════════════════════ -->
+<div class="view" id="view-simulator" style="padding-top:96px;">
+  <div class="sim-hero">
+    <div class="sim-hero-eyebrow">Simulator Kebijakan · Maluku Utara 2018–2022</div>
+    <div class="sim-hero-title">Naikan KUR → Dampak ke <span>PDRB</span></div>
+    <div class="sim-hero-sub">Geser slider untuk mensimulasikan kenaikan/penurunan KUR per sektor. Model regresi linear (R² = 0,976) menghitung estimasi dampak ke PDRB Maluku Utara secara real-time.</div>
+    <div class="sim-hero-badge"><span class="dot"></span> Data aktual 2018 Q1 – 2022 Q3 · BPS &amp; DDAC 2026</div>
+  </div>
+  <div class="sim-main">
+    <!-- LEFT: Sliders -->
+    <div>
+      <div class="sim-panel">
+        <div class="sim-panel-header">
+          <div class="sim-panel-title">⚙️ Atur Kenaikan KUR per Sektor</div>
+          <button class="reset-btn" onclick="resetAll()" style="width:auto;padding:4px 10px;font-size:.7rem;margin:0">↺ Reset</button>
+        </div>
+        <div class="sim-panel-body" id="slider-container"></div>
+      </div>
+    </div>
+    <!-- RIGHT: Results -->
+    <div style="display:flex;flex-direction:column;gap:18px;">
+      <div class="sim-panel">
+        <div class="sim-panel-header"><div class="sim-panel-title">📊 Estimasi Dampak ke PDRB</div></div>
+        <div class="sim-panel-body">
+          <div class="result-grid">
+            <div class="rcard accent">
+              <div class="rcard-label">PDRB Baseline</div>
+              <div class="rcard-val" id="r-baseline">17.529</div>
+              <div class="rcard-sub">Miliar Rp · 2022 Q3</div>
+            </div>
+            <div class="rcard accent2">
+              <div class="rcard-label">PDRB Simulasi</div>
+              <div class="rcard-val" id="r-simulated">17.529</div>
+              <div class="rcard-sub" id="r-simulated-sub">Miliar Rp · estimasi model</div>
+            </div>
+            <div class="rcard goldcard">
+              <div class="rcard-label">Δ PDRB (Absolut)</div>
+              <div class="rcard-val" id="r-delta-abs">0</div>
+              <div class="rcard-sub">Miliar Rp</div>
+            </div>
+            <div class="rcard goldcard">
+              <div class="rcard-label">Δ PDRB (%)</div>
+              <div class="rcard-val" id="r-delta-pct">0,00%</div>
+              <div class="rcard-sub">Dari baseline</div>
+            </div>
+          </div>
+          <div id="r-delta-message" class="delta-row delta-zero">
+            <span class="delta-icon">➡️</span>
+            <span id="r-delta-text">Tidak ada perubahan dari baseline.</span>
+          </div>
+          <div class="disclaimer">⚠️ <strong>Catatan metodologi:</strong> Hasil simulasi menggunakan model regresi linear yang dilatih pada data 20 observasi triwulanan (2018–2022). Koefisien mencerminkan hubungan historis, bukan kausalitas langsung. Gunakan sebagai indikasi arah, bukan proyeksi presisi.</div>
+        </div>
+      </div>
+      <div class="sim-panel">
+        <div class="sim-panel-header"><div class="sim-panel-title">📈 Tren PDRB Historis + Simulasi</div></div>
+        <div class="sim-panel-body">
+          <div class="chart-wrap"><canvas id="chart-pdrb"></canvas></div>
+        </div>
+      </div>
+      <div class="sim-panel">
+        <div class="sim-panel-header"><div class="sim-panel-title">🏗️ Kontribusi Δ KUR per Sektor ke PDRB</div></div>
+        <div class="sim-panel-body">
+          <div class="contrib-title">Dampak estimasi per sektor (Miliar Rp)</div>
+          <div id="contrib-bars"></div>
+        </div>
+      </div>
+      <div class="sim-panel">
+        <div class="sim-panel-header"><div class="sim-panel-title">📋 Data Historis KUR &amp; PDRB</div></div>
+        <div class="sim-panel-body" style="padding:0;overflow-x:auto;">
+          <table class="hist-table">
+            <thead><tr><th>Periode</th><th>PDRB (Miliar)</th><th>Growth YoY</th><th>Growth QoQ</th><th>Total KUR (Rp)</th></tr></thead>
+            <tbody id="hist-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /view-simulator -->
+
+<!-- FOOTER (only analisis) -->
+<div class="foot foot-nav">
+  <button class="foot-btn" id="btnPrev" onclick="prevSlide()">← Sebelumnya</button>
+  <div class="foot-ind" id="slideInd">1 / 7</div>
+  <button class="foot-btn primary" id="btnNext" onclick="nextSlide()">Selanjutnya →</button>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   VIEW SWITCHER
+════════════════════════════════════════ */
+let currentView = 'analisis';
+function switchView(v) {
+  currentView = v;
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.getElementById('pill-analisis').classList.toggle('active', v === 'analisis');
+  document.getElementById('pill-simulator').classList.toggle('active', v === 'simulator');
+  document.querySelector('.nav-tabs').style.display = v === 'analisis' ? 'flex' : 'none';
+  document.querySelector('.foot-nav').style.display = v === 'analisis' ? 'flex' : 'none';
+  window.scrollTo(0, 0);
+  if (v === 'simulator' && !simInited) initSimulator();
+}
+
+/* ════════════════════════════════════════
+   SLIDE NAV
+════════════════════════════════════════ */
+const TOTAL = 7; let cur = 0;
+document.querySelectorAll('.nav-tab').forEach((t, i) => t.dataset.idx = i);
+function goSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('slide-' + n).classList.add('active');
+  document.querySelector('.nav-tab[data-idx="' + n + '"]').classList.add('active');
+  document.getElementById('slideInd').textContent = (n + 1) + ' / ' + TOTAL;
+  document.getElementById('btnPrev').style.opacity = n === 0 ? '0.35' : '1';
+  document.getElementById('btnNext').style.opacity = n === TOTAL - 1 ? '0.35' : '1';
+  window.scrollTo(0, 0); cur = n;
+}
+function nextSlide() { if (cur < TOTAL - 1) goSlide(cur + 1); }
+function prevSlide() { if (cur > 0) goSlide(cur - 1); }
+document.getElementById('btnPrev').style.opacity = '0.35';
+
+/* ════════════════════════════════════════
+   RESPONSIVE GRID
+════════════════════════════════════════ */
+function applyGrids() {
+  const m = window.innerWidth < 700;
+  document.getElementById('gKab').className = 'grid gap-lg' + (m ? '' : ' g3');
+  document.getElementById('gKabNarasi').className = 'grid' + (m ? '' : ' g2');
+  document.getElementById('gLines').className = 'grid' + (m ? ' g2' : ' g4');
+  document.getElementById('gSkema').className = 'grid' + (m ? '' : ' g2');
+  document.getElementById('gSkemaInfo').className = 'grid' + (m ? '' : ' g2');
+  document.getElementById('gReg').className = 'grid' + (m ? '' : ' g2');
+  document.getElementById('gKesimpulan').className = 'grid' + (m ? '' : ' g2');
+  if (m) document.querySelectorAll('.insight-grid').forEach(g => g.style.gridTemplateColumns = '1fr');
+}
+applyGrids(); window.addEventListener('resize', applyGrids);
+
+/* ════════════════════════════════════════
+   CHART HELPERS
+════════════════════════════════════════ */
+const NAVY = '#1A3A6B', GOLD = '#E8A000', GREEN = '#2E8B3A', TEAL = '#0E7C6A';
+const gridC = '#E2E8F0', textC = '#5A6478';
+const YEARS = ['2018', '2019', '2020', '2021', '2022'];
+function tt() {
+  return {
+    backgroundColor: '#FFFFFF', borderColor: '#D0D8E8', borderWidth: 1,
+    titleColor: NAVY, bodyColor: '#3A4560', padding: 10, cornerRadius: 8,
+    titleFont: { family: "'DM Serif Display',serif", size: 13 },
+    bodyFont: { family: "'DM Sans',sans-serif", size: 12 }
+  };
+}
+
+/* SLIDE 0 - OVERVIEW */
+new Chart(document.getElementById('cOverview'), {
+  type: 'bar',
+  data: {
+    labels: YEARS,
+    datasets: [{ label: 'Subsidi KUR (Miliar Rp)', data: [23.66, 27.13, 29.29, 47.17, 45.88], backgroundColor: [GOLD, GOLD, GOLD, '#2E8B3A', '#2E8B3A'], borderRadius: 5, borderSkipped: false }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { ...tt(), callbacks: { label: c => ' Rp ' + c.parsed.y.toFixed(2) + ' Miliar' } } },
+    scales: {
+      x: { ticks: { color: textC, font: { size: 11 } }, grid: { display: false } },
+      y: { ticks: { callback: v => v + 'M', color: textC, font: { size: 10 } }, grid: { color: gridC } }
+    }
+  }
+});
+
+/* SLIDE 2 - KABUPATEN */
+const kabL = ['Kota Ternate', 'Kota Tidore Kep.', 'Kab. Halmahera Utara', 'Kab. Halmahera Selatan', 'Kab. Halmahera Timur', 'Kab. Halmahera Tengah', 'Kab. Halmahera Barat', 'Kab. Pulau Morotai', 'Kab. Kepulauan Sula', 'Kab. Pulau Taliabu'];
+const kabV = [38.793, 25.697, 23.731, 22.529, 19.025, 15.357, 11.514, 7.458, 6.869, 1.966];
+const kabC = [GOLD, GREEN, '#2980B9', '#C0392B', '#8E44AD', '#E67E22', '#16A085', '#7F8C8D', '#2980B9', '#27AE60'];
+new Chart(document.getElementById('c1bar'), {
+  type: 'bar', data: { labels: kabL, datasets: [{ data: kabV, backgroundColor: kabC, borderRadius: 4, borderSkipped: false }] },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { ...tt(), callbacks: { label: c => ' Rp ' + c.parsed.x.toFixed(2) + ' M (' + ((c.parsed.x / 173.14) * 100).toFixed(1) + '%)' } } },
+    scales: { x: { ticks: { callback: v => v + 'M', color: textC, font: { size: 10 } }, grid: { color: gridC } }, y: { ticks: { color: textC, font: { size: 10 } }, grid: { display: false } } }
+  }
+});
+new Chart(document.getElementById('c1pie'), {
+  type: 'doughnut', data: { labels: kabL, datasets: [{ data: kabV, backgroundColor: kabC, borderWidth: 2, borderColor: '#fff' }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false }, tooltip: { ...tt(), callbacks: { label: c => ' ' + c.label + ': ' + ((c.parsed / 173.14) * 100).toFixed(1) + '%' } } } }
+});
+const l1 = document.getElementById('leg1'); l1.className = 'legend';
+kabL.forEach((l, i) => { l1.innerHTML += `<div class="leg-item"><span class="leg-dot" style="background:${kabC[i]}"></span><span>${l}</span><span class="leg-pct">${((kabV[i] / 173.14) * 100).toFixed(1)}%</span></div>`; });
+
+/* SLIDE 3 - SEKTOR */
+const sekL = ['Perdagangan Besar & Eceran', 'Pertanian & Kehutanan', 'Akomodasi & Makan Minum', 'Perikanan', 'Jasa Kemasyarakatan', 'Industri Pengolahan', 'Transportasi & Pergudangan', 'Real Estate & Jasa', 'Lainnya'];
+const sekV = [98.547, 20.007, 14.628, 10.740, 10.568, 9.748, 6.614, 1.906, 0.386];
+const sekC = [GOLD, GREEN, '#E67E22', '#2980B9', '#8E44AD', '#C0392B', '#16A085', '#7F8C8D', '#BDC3C7'];
+new Chart(document.getElementById('c2pie'), {
+  type: 'doughnut', data: { labels: sekL, datasets: [{ data: sekV, backgroundColor: sekC, borderWidth: 2, borderColor: '#fff' }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { display: false }, tooltip: { ...tt(), callbacks: { label: c => ' ' + c.label + ': Rp ' + c.parsed.toFixed(2) + ' M (' + ((c.parsed / 173.14) * 100).toFixed(1) + '%)' } } } }
+});
+const l2 = document.getElementById('leg2');
+sekL.forEach((l, i) => { l2.innerHTML += `<div class="leg-item"><span class="leg-dot" style="background:${sekC[i]}"></span><span>${l}</span><span class="leg-pct">${((sekV[i] / 173.14) * 100).toFixed(1)}%</span></div>`; });
+
+const top4 = [
+  { id: 'cL1', color: GOLD, fill: 'rgba(232,160,0,0.08)', vals: [10.829, 16.004, 16.812, 16.319, 25.121, 24.291] },
+  { id: 'cL2', color: GREEN, fill: 'rgba(46,139,58,0.08)', vals: [1.048, 2.886, 3.487, 3.344, 5.206, 5.083] },
+  { id: 'cL3', color: '#E67E22', fill: 'rgba(230,126,34,0.08)', vals: [0.594, 0.967, 1.800, 3.058, 4.625, 4.178] },
+  { id: 'cL4', color: '#2980B9', fill: 'rgba(41,128,185,0.08)', vals: [0.610, 0.961, 1.271, 1.619, 3.394, 3.495] },
+];
+top4.forEach(s => {
+  const v = s.vals;
+  new Chart(document.getElementById(s.id), {
+    type: 'line',
+    data: { labels: YEARS, datasets: [{ data: v.slice(1), borderColor: s.color, backgroundColor: s.fill, pointBackgroundColor: s.color, pointRadius: 4, pointHoverRadius: 7, tension: .35, fill: true, borderWidth: 2 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...tt(), callbacks: {
+            title: i => 'Tahun ' + i[0].label,
+            label: c => { const i = c.dataIndex, cur = v[i + 1], prev = v[i]; const diff = cur - prev, pct = diff / prev * 100, sign = diff >= 0 ? '+' : ''; return [' Nilai KUR : Rp ' + cur.toFixed(3) + ' M', ' Growth    : ' + sign + pct.toFixed(1) + '%']; }
+          }
+        }
+      },
+      scales: { x: { ticks: { color: textC, font: { size: 9 }, maxRotation: 0 }, grid: { color: gridC } }, y: { ticks: { callback: v => v + 'M', color: textC, font: { size: 9 } }, grid: { color: gridC } } },
+      interaction: { mode: 'index', intersect: false }
+    }
+  });
+});
+
+/* SLIDE 4 - SKEMA */
+const skL = ['Mikro - KMK', 'Kecil - KMK', 'Mikro - KI', 'Kecil - KI', 'Super Mikro - KMK', 'Super Mikro - KI', 'TKI'];
+const skV = [96.774, 37.854, 16.832, 15.524, 5.780, 0.379, 0.001];
+const skC = [GOLD, '#F5BC30', GREEN, '#4CAF50', '#2980B9', '#5DADE2', '#C0392B'];
+new Chart(document.getElementById('c3pie'), {
+  type: 'doughnut', data: { labels: skL, datasets: [{ data: skV, backgroundColor: skC, borderWidth: 2, borderColor: '#fff' }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '58%', plugins: { legend: { display: true, position: 'bottom', labels: { color: textC, font: { size: 10 }, boxWidth: 10, usePointStyle: true, padding: 8 } }, tooltip: { ...tt(), callbacks: { label: c => ' ' + c.label + ': Rp ' + c.parsed.toFixed(2) + ' M' } } } }
+});
+new Chart(document.getElementById('c3bar'), {
+  type: 'bar',
+  data: { labels: ['Mikro', 'Kecil', 'Super Mikro'], datasets: [{ label: 'Modal Kerja (KMK)', data: [96.774, 37.854, 5.780], backgroundColor: GOLD, borderRadius: 4, borderSkipped: false }, { label: 'Investasi (KI)', data: [16.832, 15.524, 0.379], backgroundColor: GREEN, borderRadius: 4, borderSkipped: false }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, labels: { color: textC, font: { size: 11 }, boxWidth: 10 } }, tooltip: { ...tt(), callbacks: { label: c => ' ' + c.dataset.label + ': Rp ' + c.parsed.y.toFixed(2) + ' M' } } }, scales: { x: { ticks: { color: textC, font: { size: 11 } }, grid: { display: false } }, y: { ticks: { callback: v => v + 'M', color: textC, font: { size: 11 } }, grid: { color: gridC } } } }
+});
+
+/* SLIDE 5 - REGRESI CHARTS */
+// Koefisien dari model (nilai absolut untuk ranking)
+const coefData = {
+  sectors: ['Perikanan', 'Jasa Pendidikan', 'Jasa Kesehatan', 'Jasa Kemasyarakatan', 'Industri Pengolahan', 'Transportasi', 'Pertanian', 'Akomodasi', 'Perdagangan', 'Real Estate', 'Konstruksi'],
+  eviews_sign: [1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1], // positif/negatif dari EViews
+  coef_abs: [1.39e-5, 1.50e-4, 3.18e-6, 4.54e-5, 2.41e-5, 6.24e-6, 4.98e-6, 2.78e-6, 1.96e-6, 3.07e-5, 3.33e-4]
+};
+// Orange elastic net contribution bars
+const orangeRanking = [
+  { name: 'Perikanan', score: 1.0, color: TEAL },
+  { name: 'Industri Pengolahan', score: 0.78, color: '#2980B9' },
+  { name: 'Jasa Pendidikan', score: 0.62, color: '#8E44AD' },
+  { name: 'Jasa Kesehatan', score: 0.48, color: GREEN },
+  { name: 'Akomodasi & Makan Minum', score: 0.32, color: '#E67E22' },
+  { name: 'Jasa Kemasyarakatan', score: 0.24, color: '#16A085' },
+  { name: 'Real Estate', score: 0.18, color: '#7F8C8D' },
+  { name: 'Transportasi', score: 0.14, color: '#9B59B6' },
+  { name: 'Pertanian', score: 0.09, color: '#C0392B' },
+  { name: 'Konstruksi', score: 0.06, color: '#F39C12' },
+  { name: 'Perdagangan', score: 0.02, color: GOLD },
+];
+const orangeDiv = document.getElementById('orange-contrib');
+orangeRanking.forEach((r, i) => {
+  orangeDiv.innerHTML += `<div class="contrib-row">
+    <div class="contrib-label">${i + 1}. ${r.name}</div>
+    <div class="contrib-bar-wrap"><div class="contrib-bar" style="width:${r.score * 100}%;background:${r.color}"></div></div>
+    <div class="contrib-val" style="color:${r.color}">${(r.score * 100).toFixed(0)}%</div>
+  </div>`;
+});
+
+// EViews coefficient chart
+const eviewsColors = coefData.eviews_sign.map(s => s > 0 ? TEAL : '#C0392B');
+new Chart(document.getElementById('cCoef'), {
+  type: 'bar',
+  data: {
+    labels: coefData.sectors,
+    datasets: [{ label: 'Koefisien (arah EViews)', data: coefData.coef_abs.map((v, i) => v * coefData.eviews_sign[i] * 1e5), backgroundColor: eviewsColors, borderRadius: 4, borderSkipped: false }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: { ...tt(), callbacks: { label: c => (c.parsed.x > 0 ? '✅ Positif' : '❌ Negatif') + ' · koef = ' + (c.parsed.x / 1e5 * coefData.eviews_sign[c.dataIndex]).toExponential(2) } }
+    },
+    scales: {
+      x: { ticks: { color: textC, font: { size: 9 } }, grid: { color: gridC }, title: { display: true, text: '← Negatif | Positif →', color: textC, font: { size: 9 } } },
+      y: { ticks: { color: textC, font: { size: 9 } }, grid: { display: false } }
+    }
+  }
+});
+
+/* ════════════════════════════════════════
+   SIMULATOR
+════════════════════════════════════════ */
+const SIM_DATA = {"kur_baseline":{"INDUSTRI PENGOLAHAN":549177628.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":721819528.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":24230548.0,"JASA PENDIDIKAN":2899513.0,"KONSTRUKSI":10471823.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1054364172.0,"PERDAGANGAN BESAR DAN ECERAN":4659544344.0,"PERIKANAN":599642254.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":892452847.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":108342664.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":425118784.0},"pdrb_baseline":17529.3,"lr_coef":{"INDUSTRI PENGOLAHAN":-2.407497235071074e-05,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":4.5401261118064665e-05,"JASA KESEHATAN DAN KEGIATAN SOSIAL":-3.1765571391390755e-06,"JASA PENDIDIKAN":-0.00015013488349656148,"KONSTRUKSI":-0.00033333345535105846,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":-2.7809808785005025e-06,"PERDAGANGAN BESAR DAN ECERAN":-1.9566061236102075e-06,"PERIKANAN":1.3875180263568946e-05,"PERTAMBANGAN DAN PENGGALIAN":0.01473486056654917,"PERTANIAN, PERBURUAN DAN KEHUTANAN":-4.982350526048495e-06,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":-3.073427197316888e-05,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":-6.240499195652915e-06},"lr_r2":0.9761048749525723,"sectors":["INDUSTRI PENGOLAHAN","JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA","JASA KESEHATAN DAN KEGIATAN SOSIAL","JASA PENDIDIKAN","KONSTRUKSI","PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM","PERDAGANGAN BESAR DAN ECERAN","PERIKANAN","PERTAMBANGAN DAN PENGGALIAN","PERTANIAN, PERBURUAN DAN KEHUTANAN","REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN","TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI"],"history":[{"tahun":2018,"triwulan":1,"pdrb":8502.5,"pdrb_yoy":11.19030183,"pdrb_qoq":0.6772998,"kur":{"INDUSTRI PENGOLAHAN":187949287.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":203243568.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":0.0,"JASA PENDIDIKAN":5054678.0,"KONSTRUKSI":0.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":188157732.0,"PERDAGANGAN BESAR DAN ECERAN":3408468242.0,"PERIKANAN":200406946.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":497797282.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":66274159.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":139331092.0}},{"tahun":2018,"triwulan":2,"pdrb":8932.8,"pdrb_yoy":12.74232633,"pdrb_qoq":5.060864452,"kur":{"INDUSTRI PENGOLAHAN":222025857.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":255363470.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":0.0,"JASA PENDIDIKAN":4618826.0,"KONSTRUKSI":1221796.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":249730160.0,"PERDAGANGAN BESAR DAN ECERAN":4137047955.0,"PERIKANAN":242595052.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":689877498.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":68998105.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":153398297.0}},{"tahun":2018,"triwulan":3,"pdrb":9417.3,"pdrb_yoy":14.04541326,"pdrb_qoq":5.423831274,"kur":{"INDUSTRI PENGOLAHAN":227137650.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":275317038.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":0.0,"JASA PENDIDIKAN":4864025.0,"KONSTRUKSI":1854246.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":260813677.0,"PERDAGANGAN BESAR DAN ECERAN":4188357669.0,"PERIKANAN":254818301.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":798910144.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":69373233.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":156659410.0}},{"tahun":2018,"triwulan":4,"pdrb":9616.6,"pdrb_yoy":13.86925272,"pdrb_qoq":2.116317841,"kur":{"INDUSTRI PENGOLAHAN":231977084.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":300275918.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":261284.0,"JASA PENDIDIKAN":4797897.0,"KONSTRUKSI":0.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":268530384.0,"PERDAGANGAN BESAR DAN ECERAN":4270124480.0,"PERIKANAN":263215844.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":899799043.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":82887293.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":180522235.0}},{"tahun":2019,"triwulan":1,"pdrb":9543.8,"pdrb_yoy":12.24698618,"pdrb_qoq":-0.757024312,"kur":{"INDUSTRI PENGOLAHAN":225601594.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":288082794.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":2294383.0,"JASA PENDIDIKAN":4326157.0,"KONSTRUKSI":2711589.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":290243569.0,"PERDAGANGAN BESAR DAN ECERAN":3949341615.0,"PERIKANAN":252472115.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":813541810.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":74440708.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":167181255.0}},{"tahun":2019,"triwulan":2,"pdrb":9812.8,"pdrb_yoy":9.851334408,"pdrb_qoq":2.818583793,"kur":{"INDUSTRI PENGOLAHAN":274922689.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":360952762.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":7119968.0,"JASA PENDIDIKAN":4034822.0,"KONSTRUKSI":3186915.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":397345921.0,"PERDAGANGAN BESAR DAN ECERAN":4354902092.0,"PERIKANAN":297832888.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":826909791.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":85398349.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":178320936.0}},{"tahun":2019,"triwulan":3,"pdrb":9947.5,"pdrb_yoy":5.630063819,"pdrb_qoq":1.372696886,"kur":{"INDUSTRI PENGOLAHAN":307981744.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":386452696.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":7729237.0,"JASA PENDIDIKAN":4272007.0,"KONSTRUKSI":3288672.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":491597312.0,"PERDAGANGAN BESAR DAN ECERAN":4381302970.0,"PERIKANAN":350081699.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":914684561.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":93987090.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":212813127.0}},{"tahun":2019,"triwulan":4,"pdrb":10391.3,"pdrb_yoy":8.055861739,"pdrb_qoq":4.461422468,"kur":{"INDUSTRI PENGOLAHAN":349649062.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":402062257.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":7770498.0,"JASA PENDIDIKAN":3720437.0,"KONSTRUKSI":2641448.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":620683402.0,"PERDAGANGAN BESAR DAN ECERAN":4126127468.0,"PERIKANAN":370542215.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":931791012.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":79036483.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":223754519.0}},{"tahun":2020,"triwulan":1,"pdrb":10063.7,"pdrb_yoy":5.447515665,"pdrb_qoq":-3.152637302,"kur":{"INDUSTRI PENGOLAHAN":363518484.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":361895200.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":9082569.0,"JASA PENDIDIKAN":440860.0,"KONSTRUKSI":2291526.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":651095235.0,"PERDAGANGAN BESAR DAN ECERAN":3695316890.0,"PERIKANAN":342628334.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":782003519.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":64108610.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":238059782.0}},{"tahun":2020,"triwulan":2,"pdrb":9863.9,"pdrb_yoy":0.52074841,"pdrb_qoq":-1.985353299,"kur":{"INDUSTRI PENGOLAHAN":428485918.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":394325175.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":11538011.0,"JASA PENDIDIKAN":2565030.0,"KONSTRUKSI":766846.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":759040696.0,"PERDAGANGAN BESAR DAN ECERAN":3962902316.0,"PERIKANAN":374927902.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":796857984.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":76020456.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":263780159.0}},{"tahun":2020,"triwulan":3,"pdrb":10719.4,"pdrb_yoy":7.759738628,"pdrb_qoq":8.673040075,"kur":{"INDUSTRI PENGOLAHAN":456234478.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":423044565.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":13642488.0,"JASA PENDIDIKAN":1378989.0,"KONSTRUKSI":652202.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":821263899.0,"PERDAGANGAN BESAR DAN ECERAN":4048841815.0,"PERIKANAN":394771315.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":797983049.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":75892844.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":274886045.0}},{"tahun":2020,"triwulan":4,"pdrb":11652.1,"pdrb_yoy":12.13322683,"pdrb_qoq":8.7010467,"kur":{"INDUSTRI PENGOLAHAN":543618697.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":511149739.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":17207178.0,"JASA PENDIDIKAN":644294.0,"KONSTRUKSI":367598.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":826689761.0,"PERDAGANGAN BESAR DAN ECERAN":4612275485.0,"PERIKANAN":506410016.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":967648321.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":92091408.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":325520798.0}},{"tahun":2021,"triwulan":1,"pdrb":11656.0,"pdrb_yoy":15.82221251,"pdrb_qoq":0.033470362,"kur":{"INDUSTRI PENGOLAHAN":564993659.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":545652987.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":17567396.0,"JASA PENDIDIKAN":483807.0,"KONSTRUKSI":204139.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":957152210.0,"PERDAGANGAN BESAR DAN ECERAN":4695694452.0,"PERIKANAN":560516505.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":996196256.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":96689375.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":402195881.0}},{"tahun":2021,"triwulan":2,"pdrb":12380.0,"pdrb_yoy":25.50816614,"pdrb_qoq":6.211393274,"kur":{"INDUSTRI PENGOLAHAN":644461627.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":627180346.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":17655231.0,"JASA PENDIDIKAN":2716993.0,"KONSTRUKSI":1158676.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1059360282.0,"PERDAGANGAN BESAR DAN ECERAN":5344289887.0,"PERIKANAN":702045619.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":1156720437.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":105595070.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":449965913.0}},{"tahun":2021,"triwulan":3,"pdrb":12947.0,"pdrb_yoy":20.78101386,"pdrb_qoq":4.57996769,"kur":{"INDUSTRI PENGOLAHAN":824928263.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":849808928.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":19753080.0,"JASA PENDIDIKAN":5623969.0,"KONSTRUKSI":4015072.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1262166811.0,"PERDAGANGAN BESAR DAN ECERAN":6627569768.0,"PERIKANAN":879901438.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":1358612889.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":128263762.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":555268143.0}},{"tahun":2021,"triwulan":4,"pdrb":15496.0,"pdrb_yoy":32.98890329,"pdrb_qoq":19.6879586,"kur":{"INDUSTRI PENGOLAHAN":1045787640.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":1058432032.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":22594240.0,"JASA PENDIDIKAN":5081944.0,"KONSTRUKSI":5572877.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1346355476.0,"PERDAGANGAN BESAR DAN ECERAN":8453608187.0,"PERIKANAN":1251566462.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":1694749750.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":156926779.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":668818751.0}},{"tahun":2022,"triwulan":1,"pdrb":16551.9,"pdrb_yoy":42.00326012,"pdrb_qoq":6.81401652,"kur":{"INDUSTRI PENGOLAHAN":1075507326.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":1162079105.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":27620313.0,"JASA PENDIDIKAN":5642941.0,"KONSTRUKSI":10490790.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1437592865.0,"PERDAGANGAN BESAR DAN ECERAN":9016139108.0,"PERIKANAN":1339871777.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":1872192322.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":167535475.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":738586924.0}},{"tahun":2022,"triwulan":2,"pdrb":17386.9,"pdrb_yoy":40.44345719,"pdrb_qoq":5.044738066,"kur":{"INDUSTRI PENGOLAHAN":1193633126.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":1418301730.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":36527811.0,"JASA PENDIDIKAN":5423869.0,"KONSTRUKSI":17289629.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1632240171.0,"PERDAGANGAN BESAR DAN ECERAN":10401904038.0,"PERIKANAN":1534374857.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":2288769844.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":196261835.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":847600626.0}},{"tahun":2022,"triwulan":3,"pdrb":17529.3,"pdrb_yoy":35.39275508,"pdrb_qoq":0.819007414,"kur":{"INDUSTRI PENGOLAHAN":549177628.0,"JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA":721819528.0,"JASA KESEHATAN DAN KEGIATAN SOSIAL":24230548.0,"JASA PENDIDIKAN":2899513.0,"KONSTRUKSI":10471823.0,"PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM":1054364172.0,"PERDAGANGAN BESAR DAN ECERAN":4659544344.0,"PERIKANAN":599642254.0,"PERTAMBANGAN DAN PENGGALIAN":0.0,"PERTANIAN, PERBURUAN DAN KEHUTANAN":892452847.0,"REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN":108342664.0,"TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI":425118784.0}}]};
+
+const SECTOR_SHORT = {
+  'INDUSTRI PENGOLAHAN': 'Industri Pengolahan',
+  'JASA KEMASYARAKATAN, SOSIAL BUDAYA, HIBURAN DAN PERORANGAN LAINNYA': 'Jasa Kemasyarakatan',
+  'JASA KESEHATAN DAN KEGIATAN SOSIAL': 'Jasa Kesehatan',
+  'JASA PENDIDIKAN': 'Jasa Pendidikan',
+  'KONSTRUKSI': 'Konstruksi',
+  'PENYEDIAAN AKOMODASI DAN PENYEDIAAN MAKAN MINUM': 'Akomodasi & Makan Minum',
+  'PERDAGANGAN BESAR DAN ECERAN': 'Perdagangan',
+  'PERIKANAN': 'Perikanan',
+  'PERTAMBANGAN DAN PENGGALIAN': 'Pertambangan',
+  'PERTANIAN, PERBURUAN DAN KEHUTANAN': 'Pertanian',
+  'REAL ESTATE, USAHA PERSEWAAN, DAN JASA PERUSAHAAN': 'Real Estate',
+  'TRANSPORTASI, PERGUDANGAN DAN KOMUNIKASI': 'Transportasi'
+};
+const SECTOR_COLORS_SIM = ['#0E7C6A','#0E4A7C','#C8860A','#B91C1C','#7C3AED','#0891B2','#059669','#DC2626','#D97706','#2563EB','#9333EA','#16A34A'];
+
+let sliderValues = {};
+let simChart = null;
+let simInited = false;
+
+SIM_DATA.sectors.forEach(s => { sliderValues[s] = 0; });
+
+function fmtRp(val) {
+  if (val >= 1e12) return 'Rp ' + (val / 1e12).toFixed(2) + ' T';
+  if (val >= 1e9) return 'Rp ' + (val / 1e9).toFixed(1) + ' M';
+  if (val >= 1e6) return 'Rp ' + (val / 1e6).toFixed(1) + ' jt';
+  return 'Rp ' + val.toLocaleString('id-ID');
+}
+
+function initSimulator() {
+  simInited = true;
+  const container = document.getElementById('slider-container');
+  SIM_DATA.sectors.forEach((sector, i) => {
+    const base = SIM_DATA.kur_baseline[sector];
+    const div = document.createElement('div');
+    div.className = 'sector-row';
+    div.innerHTML = `
+      <div class="sector-label">
+        <div>
+          <div class="sector-name" style="color:${SECTOR_COLORS_SIM[i]}">${SECTOR_SHORT[sector]}</div>
+          <div class="sector-baseline">Baseline: ${base > 0 ? fmtRp(base) : '—'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <div class="pct-input-wrap">
+            <input type="number" class="pct-input" id="num-${i}" value="0" min="-50" max="200"
+              ${base === 0 ? 'disabled' : ''}
+              oninput="onNumInput('${sector}', ${i}, this.value)"
+              onblur="onNumBlur('${sector}', ${i})">
+            <span class="pct-sign">%</span>
+          </div>
+        </div>
+      </div>
+      <input type="range" min="-50" max="200" value="0" step="1" id="slider-${i}"
+        oninput="onSlider('${sector}', ${i}, this.value)"
+        ${base === 0 ? 'disabled style="opacity:.35"' : ''}>
+    `;
+    container.appendChild(div);
+  });
+  initSimChart();
+  buildHistTable();
+  updateUI();
+}
+
+function computePDRB() {
+  let deltaPDRB = 0;
+  const contribs = {};
+  SIM_DATA.sectors.forEach(s => {
+    const pct = sliderValues[s] / 100;
+    const base = SIM_DATA.kur_baseline[s];
+    const deltaKur = base * pct;
+    const coef = SIM_DATA.lr_coef[s];
+    const deltaP = deltaKur * coef;
+    deltaPDRB += deltaP;
+    contribs[s] = deltaP;
+  });
+  return { simPDRB: SIM_DATA.pdrb_baseline + deltaPDRB, deltaPDRB, contribs };
+}
+
+function updateUI() {
+  const { simPDRB, deltaPDRB, contribs } = computePDRB();
+  const pct = (deltaPDRB / SIM_DATA.pdrb_baseline * 100);
+  document.getElementById('r-baseline').textContent = SIM_DATA.pdrb_baseline.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  document.getElementById('r-simulated').textContent = simPDRB.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  document.getElementById('r-delta-abs').textContent = (deltaPDRB >= 0 ? '+' : '') + deltaPDRB.toFixed(1);
+  document.getElementById('r-delta-pct').textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+  const msgEl = document.getElementById('r-delta-message');
+  const txtEl = document.getElementById('r-delta-text');
+  msgEl.className = 'delta-row ' + (Math.abs(pct) < 0.01 ? 'delta-zero' : pct > 0 ? 'delta-pos' : 'delta-neg');
+  if (Math.abs(pct) < 0.01) {
+    document.querySelector('#r-delta-message .delta-icon').textContent = '➡️';
+    txtEl.textContent = 'Tidak ada perubahan dari baseline.';
+  } else if (pct > 0) {
+    document.querySelector('#r-delta-message .delta-icon').textContent = '📈';
+    txtEl.textContent = `Kenaikan KUR yang disimulasikan diestimasi menaikkan PDRB Maluku Utara sebesar ${pct.toFixed(2)}% (Rp ${Math.abs(deltaPDRB).toFixed(1)} Miliar) dari baseline 2022 Q3.`;
+  } else {
+    document.querySelector('#r-delta-message .delta-icon').textContent = '📉';
+    txtEl.textContent = `Penurunan KUR yang disimulasikan diestimasi menurunkan PDRB Maluku Utara sebesar ${Math.abs(pct).toFixed(2)}% (Rp ${Math.abs(deltaPDRB).toFixed(1)} Miliar) dari baseline 2022 Q3.`;
+  }
+  updateSimChart(simPDRB);
+  const sorted = Object.entries(contribs).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  const maxAbs = Math.max(...sorted.map(([, v]) => Math.abs(v)), 0.001);
+  document.getElementById('contrib-bars').innerHTML = sorted.map(([s, v]) => {
+    const w = Math.min(100, Math.abs(v) / maxAbs * 100);
+    const col = v > 0 ? TEAL : v < 0 ? '#B91C1C' : '#94A3B8';
+    const sign = v > 0 ? '+' : '';
+    return `<div class="contrib-row">
+      <div class="contrib-label">${SECTOR_SHORT[s]}</div>
+      <div class="contrib-bar-wrap"><div class="contrib-bar" style="width:${w}%;background:${col}"></div></div>
+      <div class="contrib-val" style="color:${col}">${sign}${v.toFixed(1)}</div>
+    </div>`;
+  }).join('');
+}
+
+function applyValue(sector, i, val) {
+  val = Math.max(-50, Math.min(200, Math.round(val)));
+  sliderValues[sector] = val;
+  const sl = document.getElementById('slider-' + i);
+  const numEl = document.getElementById('num-' + i);
+  if (sl) sl.value = val;
+  if (numEl) {
+    numEl.value = val;
+    numEl.className = 'pct-input' + (val > 0 ? ' is-pos' : val < 0 ? ' is-neg' : '');
+  }
+  updateUI();
+}
+
+function onSlider(sector, i, val) {
+  applyValue(sector, i, parseInt(val));
+}
+
+function onNumInput(sector, i, val) {
+  const parsed = parseFloat(val);
+  if (!isNaN(parsed)) applyValue(sector, i, parsed);
+}
+
+function onNumBlur(sector, i) {
+  const numEl = document.getElementById('num-' + i);
+  if (!numEl) return;
+  const val = parseFloat(numEl.value);
+  if (isNaN(val)) {
+    applyValue(sector, i, 0);
+  } else {
+    applyValue(sector, i, val);
+  }
+}
+
+function resetAll() {
+  SIM_DATA.sectors.forEach((s, i) => {
+    sliderValues[s] = 0;
+    const sl = document.getElementById('slider-' + i);
+    if (sl) sl.value = 0;
+    const numEl = document.getElementById('num-' + i);
+    if (numEl) { numEl.value = 0; numEl.className = 'pct-input'; }
+  });
+  updateUI();
+}
+
+function initSimChart() {
+  const labels = SIM_DATA.history.map(h => h.tahun + ' Q' + h.triwulan);
+  const actual = SIM_DATA.history.map(h => h.pdrb);
+  const ctx = document.getElementById('chart-pdrb').getContext('2d');
+  simChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [...labels, 'Simulasi'],
+      datasets: [
+        { label: 'PDRB Aktual', data: [...actual, null], borderColor: NAVY, backgroundColor: 'rgba(26,58,107,.07)', fill: true, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2 },
+        { label: 'PDRB Simulasi', data: [...Array(actual.length - 1).fill(null), actual[actual.length - 1], SIM_DATA.pdrb_baseline], borderColor: GOLD, backgroundColor: 'rgba(232,160,0,.1)', fill: false, tension: 0, pointRadius: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,8], pointBackgroundColor: GOLD, borderWidth: 2, borderDash: [6, 3] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, usePointStyle: true } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': Rp ' + (ctx.raw || 0).toLocaleString('id-ID', { minimumFractionDigits: 1 }) + ' M' } }
+      },
+      scales: {
+        x: { grid: { color: '#F1F5F9' }, ticks: { font: { size: 10 }, maxRotation: 45 } },
+        y: { grid: { color: '#F1F5F9' }, ticks: { font: { size: 10 }, callback: v => 'Rp ' + v.toLocaleString('id-ID') + ' M' } }
+      }
+    }
+  });
+}
+
+function updateSimChart(simPDRB) {
+  if (!simChart) return;
+  const actual = SIM_DATA.history.map(h => h.pdrb);
+  simChart.data.datasets[1].data = [...Array(actual.length - 1).fill(null), actual[actual.length - 1], simPDRB];
+  simChart.data.datasets[1].borderColor = simPDRB >= SIM_DATA.pdrb_baseline ? TEAL : '#B91C1C';
+  simChart.data.datasets[1].backgroundColor = simPDRB >= SIM_DATA.pdrb_baseline ? 'rgba(14,124,106,.1)' : 'rgba(185,28,28,.1)';
+  simChart.update('none');
+}
+
+function buildHistTable() {
+  const tbody = document.getElementById('hist-tbody');
+  tbody.innerHTML = SIM_DATA.history.map(h => {
+    const totalKur = Object.values(h.kur).reduce((s, v) => s + v, 0);
+    const yoyColor = h.pdrb_yoy >= 0 ? TEAL : '#B91C1C';
+    const qoqColor = h.pdrb_qoq >= 0 ? TEAL : '#B91C1C';
+    return `<tr>
+      <td><strong>${h.tahun} Q${h.triwulan}</strong></td>
+      <td class="mono">${h.pdrb.toLocaleString('id-ID', { minimumFractionDigits: 1 })}</td>
+      <td class="mono" style="color:${yoyColor}">${h.pdrb_yoy >= 0 ? '+' : ''}${h.pdrb_yoy.toFixed(2)}%</td>
+      <td class="mono" style="color:${qoqColor}">${h.pdrb_qoq >= 0 ? '+' : ''}${h.pdrb_qoq.toFixed(2)}%</td>
+      <td class="mono">${fmtRp(totalKur)}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
